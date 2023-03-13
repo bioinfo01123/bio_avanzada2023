@@ -10,3 +10,11 @@ curl "https://rest.uniprot.org/proteomes/stream?format=json&query=%28$code%29" -
 
 echo $code
 ```
+
+# -
+
+```
+for i in names:
+    print('start cmd /c ordenes.sh ' + i)
+    os.system('start /wait cmd /c ordenes.sh ' + i) # k = keep, c = close
+```
