@@ -64,3 +64,15 @@ writer = pd.ExcelWriter('Metadata.xlsx')
 DataFrame(metadata).to_excel(writer, 'dataframe1', engine='openpyxl', index = None)
 writer.save()
 ```
+
+
+
+```
+n = 0
+bloque = []
+for i in range(int(len(lista)/50)):
+    diez = lista[n:n+50]
+    print(diez)
+    bloque.append(diez)
+    n += 50
+```
