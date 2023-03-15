@@ -76,3 +76,8 @@ for i in range(int(len(lista)/50)):
     bloque.append(diez)
     n += 50
 ```
+
+
+
+# Descargar Blast
+https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.8.1/ncbi-blast-2.8.1+-win64.exe
