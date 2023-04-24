@@ -86,6 +86,7 @@ https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.8.1/ncbi-blast-2.8.1+-wi
 
 # Plot
 
+`
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
@@ -112,3 +113,4 @@ for st, x1, x2 in save:
 
 plt.close()
 fig
+`
