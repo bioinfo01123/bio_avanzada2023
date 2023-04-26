@@ -121,10 +121,14 @@ fig
 
 
 ```
-# módulos
+# módulos y funciones
 
 import numpy as np
 import re, regex
+import warnings
+warnings.filterwarnings("ignore")
+import xlsxwriter
+
 def time_ini():
     from datetime import datetime
     xx = datetime.now()
@@ -133,11 +137,97 @@ def time_fin(i = 0):
     from datetime import datetime
     tim = datetime.now() - i
     return 'Time: {}'.format(tim).split('.')[0]
-import warnings
-warnings.filterwarnings("ignore")
-import xlsxwriter
+
+
+def open_file(file = '', size = 70):
+    fas = {}
+    with open(file) as fq:
+        for line in fq:
+            line = line.rstrip()
+            if '>' in line:
+                try:
+                    fas[ent] = s
+                except NameError:
+                    ent = line.replace('>', '').split(' ')[0]
+                N, s, ent = 0, '', line.replace('>', '').split(' ')[0]
+            else:
+                g = 0
+                while g < 1:
+                    s += re.sub('[*]', '', line)
+                    g += 1
+                N += 1
+    fas.update({ent: s})
+    del s
+    for i in list(fas.keys()):
+        if len(fas[i]) >= size:
+            pass
+        else:
+            fas.pop(i)
+    return fas
 
 ```
+
+```
+# código 
+
+KMER = '3'
+cv_threshold = 0.35
+                
+# query       
+fas1 = open_file(file = 'Bifido1.faa')
+# subject
+fas2 = open_file(file = 'Bifido1.faa')
+
+CORES = 4
+tam = int(len(fas1) / CORES) # numero de procesos
+ids = list(fas1.keys())
+
+
+listas = {}
+for e, k in enumerate(range(0, len(ids), tam)):
+    if e == (CORES - 1):
+        listas[e+1] = ids[k:len(fas1)]
+        break
+    else:
+        listas[e+1] = ids[k:k+tam]
+
+query_sets = {}
+for q in fas1:
+    que_set = set(regex.findall(r'\w{'+KMER+'}', fas1[q], overlapped=True))
+    query_sets[q] = que_set
+subject_sets = {}
+for s in fas2:
+    subject_set = set(regex.findall(r'\w{'+KMER+'}', fas2[s], overlapped=True))
+    subject_sets[s] = subject_set
+
+record3 = []
+for L in listas:
+    init = time_ini()
+    record2 = []
+    for q in listas[L]:
+        for s in list(subject_sets.keys()):
+            compartidos = len(query_sets[q] & subject_sets[s])
+            if compartidos >= int(len(subject_sets[s]) * 0.15):
+                record2.append([q, s, compartidos])
+    #-------------------------------------------------------------
+    for q, s, c in record2:
+        Kqlen, Kslen, Qlen, Slen = len(query_sets[q]), len(subject_sets[s]), len(fas1[q]), len(fas2[s])
+        A, B, C, D, E = c, Kqlen, Kslen, (Qlen - int(KMER) + 1), (Slen - int(KMER) + 1)
+        # forma 1
+        CV = np.std([A, B, C, D, E]) / np.mean([A, B, C, D, E])
+        # forma 2
+        #CV = pstdev([A, B, C]) / mean([A, B, C])
+        
+        if CV <= cv_threshold:
+            record3.append(tuple([q, s, A, B, C, B + C, D, E, Qlen, Slen, CV, 1 - CV]))
+        
+        
+    print(L, time_fin(i = init))
+print('Qacc length=', len(fas1))
+print('Sacc length=', len(fas2))
+
+```
+
 
 ```
 U = ['qacc', 'sacc', 'shared', 'Kqacc', 'Ksacc', 'Kqacc+Ksacc', 'KEqacc', 'KEsacc', 'qlen', 'slen', 'CV', '1-CV']
