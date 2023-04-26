@@ -135,6 +135,7 @@ def time_fin(i = 0):
     return 'Time: {}'.format(tim).split('.')[0]
 import warnings
 warnings.filterwarnings("ignore")
+import xlsxwriter
 
 ```
 
@@ -167,5 +168,23 @@ for x, y, z, n, m, o, p, q, r, s, t, v in np.sort(ARRAY, order = 'CV')[::1]:
         y = y.decode()
     metadata.append([x, y, z, n, m, o, p, q, r, s, t, v])
 metadata = np.array(metadata, dtype = object)
+
+## salvar los resultados en una hoja de excel
+
+N = [[i] for i in ['qacc', 'sacc', 'shared', 'Kqacc', 'Ksacc', 'Kqacc+Ksacc', 'KEqacc', 'KEsacc', 'qlen', 'slen', 'CV', '1-CV']]
+
+workbook = xlsxwriter.Workbook('arrays.xlsx')
+worksheet = workbook.add_worksheet()
+
+
+for e, i in enumerate(N):
+    worksheet.write_column(0, e, i)
+
+row = 1
+
+for col, data in enumerate(metadata.T):
+    worksheet.write_column(row, col, data)
+
+workbook.close()
 
 ```
