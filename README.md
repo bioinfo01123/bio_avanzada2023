@@ -114,3 +114,59 @@ for st, x1, x2 in save:
 plt.close()
 fig
 ```
+
+
+
+### Proyecto Erick y Alfredo
+
+
+```
+# módulos
+
+import numpy as np
+import re
+import re, regex
+def time_ini():
+    from datetime import datetime
+    xx = datetime.now()
+    return xx
+def time_fin(i = 0):
+    from datetime import datetime
+    tim = datetime.now() - i
+    return 'Time: {}'.format(tim).split('.')[0]
+import warnings
+warnings.filterwarnings("ignore")
+
+```
+
+```
+U = ['qacc', 'sacc', 'shared', 'Kqacc', 'Ksacc', 'Kqacc+Ksacc', 'KEqacc', 'KEsacc', 'qlen', 'slen', 'CV', '1-CV']
+D = ['S200', 'S200', object, object, object, object, object, object, object, object, float, float]
+dtype2 = list(zip(U, D))
+
+
+data = []
+datos00 = np.array(record3, dtype = object)
+for u in ids:
+    d = datos00[datos00[:, 0] == u]
+    values = [tuple(i) for i in d]
+    b = np.array(values, dtype = dtype2)
+    c = np.sort(b, order='CV')[::1][:1]
+    for x, y, z, n, m, o, p, q, r, s, t, v in c:
+        if type(x == np.bytes_):
+            x = x.decode()
+        if type(y == np.bytes_):
+            y = y.decode()
+        data.append(tuple([x, y, z, n, m, o, p, q, r, s, t, v]))
+
+ARRAY = np.array(data, dtype = dtype2)
+metadata = []
+for x, y, z, n, m, o, p, q, r, s, t, v in np.sort(ARRAY, order = 'CV')[::1]:
+    if type(x == np.bytes_):
+        x = x.decode()
+    if type(y == np.bytes_):
+        y = y.decode()
+    metadata.append([x, y, z, n, m, o, p, q, r, s, t, v])
+metadata = np.array(metadata, dtype = object)
+
+```
