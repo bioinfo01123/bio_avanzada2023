@@ -124,7 +124,6 @@ fig
 # módulos
 
 import numpy as np
-import re
 import re, regex
 def time_ini():
     from datetime import datetime
